@@ -91,11 +91,11 @@ public class UpdateWorld : MonoBehaviour
         //record start of mouse drawing (or erasing) to get the first position the mouse touches down
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) )
         {
-            RaycastHit ray;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out ray))
+            RaycastHit _ray;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _ray))
             {
-                lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
-                                        (int)(ray.textureCoord.y * texture.height));
+                lastPoint = new Vector2((int)(_ray.textureCoord.x * texture.width),
+                                        (int)(_ray.textureCoord.y * texture.height));
             }
         }
         //draw a line between the last known location of the mouse and the current location
