@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawPlane: {fileID: 359589837}
+  paintColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &227567094
 Transform:
   m_ObjectHideFlags: 0
