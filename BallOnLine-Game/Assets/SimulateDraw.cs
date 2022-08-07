@@ -7,10 +7,10 @@ public class SimulateDraw : MonoBehaviour
 {
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
+    [SerializeField] Color baseColor = Color.black;
 
     Vector2Int lastPoint = Vector2Int.zero;
-    float rayDistance;
-    Queue<Vector2Int> drawnPoints = new Queue<Vector2Int>();
+    //List<Vector2Int> drawnPoints = new List<Vector2Int>();
 
     Texture2D texture;
     void Start()
@@ -25,8 +25,6 @@ public class SimulateDraw : MonoBehaviour
         }
         drawPlane.GetComponent<Renderer>().material.mainTexture = texture;
         texture.Apply();
-
-        rayDistance = drawPlane.transform.position.z - Camera.main.transform.position.z + 1;
     }
     void Update()
     {
@@ -49,13 +47,28 @@ public class SimulateDraw : MonoBehaviour
             {
                 DrawPixelLine((int)(ray.textureCoord.x * texture.width),
                                    (int)(ray.textureCoord.y * texture.height),
-                                   (int)lastPoint.x, (int)lastPoint.y, Color.white, texture);
+                                   (int)lastPoint.x, (int)lastPoint.y, paintColor, texture);
 
                 lastPoint = new Vector2Int((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
             }
 
             texture.Apply();
+        }
+    }
+
+    //Makes the particular pixel turn back to base color after few seconds drawing it
+    IEnumerator EreasePoint(int x, int y, float ereaseTime)
+    {
+        yield return new WaitForSeconds(0.18f); //Time to wait before starting ereasing
+        while(texture.GetPixel(x, y) != baseColor)
+        {
+            Color oldColor = paintColor;
+            Color newColor = baseColor;
+            texture.SetPixel(x, y, Color.Lerp(paintColor, baseColor, ereaseTime));
+
+            texture.Apply();
+            yield return new WaitForSeconds(Time.fixedTime);
         }
     }
 
@@ -81,7 +94,8 @@ public class SimulateDraw : MonoBehaviour
         for (int i = 0; i <= longest; i++)
         {
             texture.SetPixel(x, y, color);
-            drawnPoints.Enqueue(new Vector2Int(x, y));
+            //drawnPoints.Add(new Vector2Int(x, y));
+            StartCoroutine(EreasePoint(x, y, 5f)); //starts the ereasing sequence
             numerator += shortest;
             if (!(numerator < longest))
             {
