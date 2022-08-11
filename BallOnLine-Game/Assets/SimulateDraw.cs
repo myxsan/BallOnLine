@@ -1,20 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SimulateDraw : MonoBehaviour
 {
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
     [SerializeField] Color baseColor = Color.black;
+    public GameObject obj;
 
-    Vector2Int lastPoint = Vector2Int.zero;
-    //List<Vector2Int> drawnPoints = new List<Vector2Int>();
 
+    Vector2 lastPoint = Vector2.zero;
+    private static List<Vector2> drawnPoints = new List<Vector2>();
+    
     Texture2D texture;
+    SimulateLine simulateLine;
+
+    public static List<Vector2> DrawnPoints { 
+        get 
+        { return drawnPoints; }
+        set
+        {
+            if (drawnPoints[0] == null)
+                drawnPoints = new List<Vector2>();
+        }
+    }
+    
     void Start()
     {
+        simulateLine = GetComponent<SimulateLine>();
+        simulateLine.tempStartPoint = obj.transform.position;
+
         texture = Instantiate(drawPlane.GetComponent<Renderer>().material.mainTexture) as Texture2D;
         for (int y = 0; y < texture.height; y++) // paint all pixels black
         {
@@ -34,8 +50,10 @@ public class SimulateDraw : MonoBehaviour
             RaycastHit ray;
             if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out ray))
             {
-                lastPoint = new Vector2Int((int)(ray.textureCoord.x * texture.width),
+                lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
+
+                simulateLine.tempStartPoint = lastPoint;
             }
         }
 
@@ -49,7 +67,7 @@ public class SimulateDraw : MonoBehaviour
                                    (int)(ray.textureCoord.y * texture.height),
                                    (int)lastPoint.x, (int)lastPoint.y, paintColor, texture);
 
-                lastPoint = new Vector2Int((int)(ray.textureCoord.x * texture.width),
+                lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
             }
 
@@ -63,12 +81,10 @@ public class SimulateDraw : MonoBehaviour
         yield return new WaitForSeconds(0.18f); //Time to wait before starting ereasing
         while(texture.GetPixel(x, y) != baseColor)
         {
-            Color oldColor = paintColor;
-            Color newColor = baseColor;
             texture.SetPixel(x, y, Color.Lerp(paintColor, baseColor, ereaseTime));
 
             texture.Apply();
-            yield return new WaitForSeconds(Time.fixedTime);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -94,8 +110,10 @@ public class SimulateDraw : MonoBehaviour
         for (int i = 0; i <= longest; i++)
         {
             texture.SetPixel(x, y, color);
-            //drawnPoints.Add(new Vector2Int(x, y));
-            StartCoroutine(EreasePoint(x, y, 5f)); //starts the ereasing sequence
+            
+            obj.transform.position = SimulateLine.OnDrawing(obj.transform, new Vector2(x, y), simulateLine.tempStartPoint, lastPoint, texture);
+            StartCoroutine(EreasePoint(x, y, 1f)); //starts the ereasing sequence
+
             numerator += shortest;
             if (!(numerator < longest))
             {
