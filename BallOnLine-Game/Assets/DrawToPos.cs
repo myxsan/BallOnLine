@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimulateLine : MonoBehaviour
+public class DrawToPos : MonoBehaviour
 {
     [SerializeField] Renderer drawPlane;
-
-    public Vector3 drawAreaCenter = Vector3.zero;
-    public Vector2 drawAreaSize = Vector3.zero;
 
     public delegate Vector3 DrawAction(Transform pos, Vector3 pixelPos, Vector3 startPoint, Vector3 lastPoint, Texture2D texture);
     public static DrawAction OnDrawing;
@@ -24,7 +21,7 @@ public class SimulateLine : MonoBehaviour
         OnDrawing -= DrawnPointToPosition;
     }
 
-    // takes the difference between mouse positions and move the transform accordingly;
+    // takes the difference between mouse positions and move the object position accordingly;
     private Vector3 DrawnPointToPosition(Transform pos, Vector3 pixelPos, Vector3 startPoint, Vector3 lastPoint, Texture2D texture)
     {
         Vector3 pixDif = startPoint - pixelPos;
@@ -33,18 +30,12 @@ public class SimulateLine : MonoBehaviour
         Vector3 tempPos = pos.position + dif;
 
         tempStartPoint = lastPoint;
-        Vector2 halfSize = drawAreaSize * 0.5f;
+        Vector2 halfSize = DrawArea.DrawAreaSize * 0.5f;
 
-        tempPos.x = Mathf.Clamp(tempPos.x, drawAreaCenter.x - halfSize.x,
-                                           drawAreaCenter.x + halfSize.x);
-        tempPos.y = Mathf.Clamp(tempPos.y, drawAreaCenter.y - halfSize.y,
-                                           drawAreaCenter.y + halfSize.y);
+        tempPos.x = Mathf.Clamp(tempPos.x, DrawArea.DrawAreaCenter.x - halfSize.x,
+                                           DrawArea.DrawAreaCenter.x + halfSize.x);
+        tempPos.y = Mathf.Clamp(tempPos.y, DrawArea.DrawAreaCenter.y - halfSize.y,
+                                           DrawArea.DrawAreaCenter.y + halfSize.y);
         return tempPos;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(drawAreaCenter, drawAreaSize);
     }
 }

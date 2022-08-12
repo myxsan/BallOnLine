@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimulateDraw : MonoBehaviour
+public class DrawController : MonoBehaviour
 {
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
@@ -14,7 +14,7 @@ public class SimulateDraw : MonoBehaviour
     private static List<Vector2> drawnPoints = new List<Vector2>();
     
     Texture2D texture;
-    SimulateLine simulateLine;
+    DrawToPos drawToPos;
 
     public static List<Vector2> DrawnPoints { 
         get 
@@ -28,8 +28,8 @@ public class SimulateDraw : MonoBehaviour
     
     void Start()
     {
-        simulateLine = GetComponent<SimulateLine>();
-        simulateLine.tempStartPoint = obj.transform.position;
+        drawToPos = GetComponent<DrawToPos>();
+        drawToPos.tempStartPoint = obj.transform.position;
 
         texture = Instantiate(drawPlane.GetComponent<Renderer>().material.mainTexture) as Texture2D;
         for (int y = 0; y < texture.height; y++) // paint all pixels black
@@ -53,7 +53,7 @@ public class SimulateDraw : MonoBehaviour
                 lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
 
-                simulateLine.tempStartPoint = lastPoint;
+                drawToPos.tempStartPoint = lastPoint;
             }
         }
 
@@ -111,7 +111,7 @@ public class SimulateDraw : MonoBehaviour
         {
             texture.SetPixel(x, y, color);
             
-            obj.transform.position = SimulateLine.OnDrawing(obj.transform, new Vector2(x, y), simulateLine.tempStartPoint, lastPoint, texture);
+            obj.transform.position = DrawToPos.OnDrawing(obj.transform, new Vector2(x, y), drawToPos.tempStartPoint, lastPoint, texture);
             StartCoroutine(EreasePoint(x, y, 1f)); //starts the ereasing sequence
 
             numerator += shortest;
