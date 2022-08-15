@@ -26,11 +26,8 @@ public class DrawArea : MonoBehaviour
         drawAreaCenter.x = transform.position.x;
         DrawAreaCenter = drawAreaCenter;
 
-    }
-
-    private void FixedUpdate()
-    {
         transform.Translate(WorldSpeed * Time.deltaTime);
+
     }
 
     private void OnDrawGizmos()

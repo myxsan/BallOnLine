@@ -14,7 +14,7 @@ public class UpdateLine : MonoBehaviour
         StartCoroutine(SetStartPos(Vector3.zero));
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         transform.Translate(DrawArea.WorldSpeed * Time.deltaTime);
     }

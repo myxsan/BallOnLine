@@ -7,29 +7,17 @@ public class DrawController : MonoBehaviour
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
     [SerializeField] Color baseColor = Color.black;
-    public GameObject obj;
-
+    public GameObject pen;
 
     Vector2 lastPoint = Vector2.zero;
-    private static List<Vector2> drawnPoints = new List<Vector2>();
     
     Texture2D texture;
     DrawToPos drawToPos;
-
-    public static List<Vector2> DrawnPoints { 
-        get 
-        { return drawnPoints; }
-        set
-        {
-            if (drawnPoints[0] == null)
-                drawnPoints = new List<Vector2>();
-        }
-    }
     
     void Start()
     {
         drawToPos = GetComponent<DrawToPos>();
-        drawToPos.tempStartPoint = obj.transform.position;
+        drawToPos.tempStartPoint = pen.transform.position;
 
         texture = Instantiate(drawPlane.GetComponent<Renderer>().material.mainTexture) as Texture2D;
         for (int y = 0; y < texture.height; y++) // paint all pixels black
@@ -111,7 +99,7 @@ public class DrawController : MonoBehaviour
         {
             texture.SetPixel(x, y, color);
             
-            obj.transform.position = DrawToPos.OnDrawing(obj.transform, new Vector2(x, y), drawToPos.tempStartPoint, lastPoint, texture);
+            pen.transform.position = DrawToPos.OnDrawing(pen.transform, new Vector2(x, y), drawToPos.tempStartPoint, lastPoint, texture);
             StartCoroutine(EreasePoint(x, y, 1f)); //starts the ereasing sequence
 
             numerator += shortest;

@@ -27,6 +27,11 @@ public class DrawToPos : MonoBehaviour
         Vector3 pixDif = startPoint - pixelPos;
         Vector3 dif = pixDif / (Vector2.one * texture.width);
 
+        if(dif.x < 0)
+        {
+            dif.x -= DrawArea.WorldSpeed.x * Time.deltaTime;
+        }
+
         Vector3 tempPos = pos.position + dif;
 
         tempStartPoint = lastPoint;
