@@ -156,6 +156,7 @@ MonoBehaviour:
   drawPlane: {fileID: 359589837}
   paintColor: {r: 1, g: 1, b: 1, a: 1}
   baseColor: {r: 0, g: 0, b: 0, a: 1}
+  test: {r: 0, g: 0, b: 0, a: 1}
   pen: {fileID: 523626825}
 --- !u!4 &227567094
 Transform:
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawPlane: {fileID: 359589839}
+  tempStartPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &359589837
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,7 +493,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 0.8
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -823,7 +825,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3141027650c923478d8eaa7bbbd943b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballSpeed: 2.28
+  ballSpeed: 2.3
+  speedGap: 0.5
 --- !u!50 &1434399280
 Rigidbody2D:
   serializedVersion: 4

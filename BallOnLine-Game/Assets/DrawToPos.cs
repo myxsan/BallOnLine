@@ -9,7 +9,7 @@ public class DrawToPos : MonoBehaviour
     public delegate Vector3 DrawAction(Transform pos, Vector3 pixelPos, Vector3 startPoint, Vector3 lastPoint, Texture2D texture);
     public static DrawAction OnDrawing;
 
-    public Vector3 tempStartPoint { get; set; }
+    public Vector3 tempStartPoint;
 
     private void OnEnable()
     {
@@ -25,7 +25,7 @@ public class DrawToPos : MonoBehaviour
     private Vector3 DrawnPointToPosition(Transform pos, Vector3 pixelPos, Vector3 startPoint, Vector3 lastPoint, Texture2D texture)
     {
         Vector3 pixDif = startPoint - pixelPos;
-        Vector3 dif = pixDif / (Vector2.one * texture.width);
+        Vector3 dif = pixDif / (Vector2.one * texture.width); // width ans height are same, if it is not change it.
 
         if(dif.x < 0)
         {

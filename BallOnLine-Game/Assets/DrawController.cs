@@ -7,6 +7,8 @@ public class DrawController : MonoBehaviour
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
     [SerializeField] Color baseColor = Color.black;
+    [SerializeField] Color test;
+
     public GameObject pen;
 
     Vector2 lastPoint = Vector2.zero;
@@ -72,7 +74,8 @@ public class DrawController : MonoBehaviour
             texture.SetPixel(x, y, Color.Lerp(paintColor, baseColor, ereaseTime));
 
             texture.Apply();
-            yield return new WaitForSeconds(1f);
+
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -100,7 +103,7 @@ public class DrawController : MonoBehaviour
             texture.SetPixel(x, y, color);
             
             pen.transform.position = DrawToPos.OnDrawing(pen.transform, new Vector2(x, y), drawToPos.tempStartPoint, lastPoint, texture);
-            StartCoroutine(EreasePoint(x, y, 1f)); //starts the ereasing sequence
+            StartCoroutine(EreasePoint(x, y, 1)); //starts the ereasing sequence
 
             numerator += shortest;
             if (!(numerator < longest))

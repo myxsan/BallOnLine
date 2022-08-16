@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class UpdateLine : MonoBehaviour
 {
-
     float halfWidth;
     void Start()
     {
         halfWidth = DrawArea.DrawAreaSize.x * 0.5f;
-        Vector3 startPos = new Vector3(-halfWidth, 0f, 0f);
+        Vector3 startPos = Vector3.right  * -halfWidth;
         transform.position = startPos;
         StartCoroutine(SetStartPos(Vector3.zero));
     }
