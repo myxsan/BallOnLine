@@ -9,20 +9,18 @@ public class DrawController : MonoBehaviour
     [SerializeField] Color paintColor = Color.white;
     [SerializeField] Color baseColor = Color.black;
 
+    [SerializeField] GameObject pen;
     [SerializeField] DrawingVFXController drawVFX;
 
-    public GameObject pen;
-
     Vector2 lastPoint = Vector2.zero;
+    Vector3 tempStartPoint;
     bool isDrawing;
     
     Texture2D texture;
-    DrawToPos drawToPos;
     
     void Start()
     {
-        drawToPos = GetComponent<DrawToPos>();
-        drawToPos.tempStartPoint = pen.transform.position;
+        tempStartPoint = pen.transform.position;
 
         texture = Instantiate(drawPlane.GetComponent<Renderer>().material.mainTexture) as Texture2D;
         for (int y = 0; y < texture.height; y++) // paint all pixels base color
@@ -47,7 +45,7 @@ public class DrawController : MonoBehaviour
                 lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
 
-                drawToPos.tempStartPoint = lastPoint;
+                tempStartPoint = lastPoint;
                 drawVFX.enabled = true;
             }
         }
@@ -115,7 +113,7 @@ public class DrawController : MonoBehaviour
         {
             texture.SetPixel(x, y, color);
             
-            pen.transform.position = DrawToPos.OnDrawing(pen.transform, new Vector2(x, y), drawToPos.tempStartPoint, lastPoint, texture);
+            pen.transform.position = DrawToPos.OnDrawing(pen.transform, new Vector2(x, y), ref tempStartPoint, lastPoint, texture);
             StartCoroutine(EreasePoint(x, y, 1)); //starts the ereasing sequence
 
             numerator += shortest;

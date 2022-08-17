@@ -10,13 +10,11 @@ public class DrawingVFXController : MonoBehaviour
     private void OnEnable()
     {
         particle.gameObject.SetActive(true);
-        particle.Play();
     }
 
     private void OnDisable()
     {
         particle.gameObject.SetActive(false);
-        particle.Stop();
     }
 
     void Update()

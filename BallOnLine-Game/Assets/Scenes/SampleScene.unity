@@ -201,8 +201,8 @@ MonoBehaviour:
   drawPlane: {fileID: 359589837}
   paintColor: {r: 1, g: 1, b: 1, a: 1}
   baseColor: {r: 0, g: 0, b: 0, a: 1}
-  drawVFX: {fileID: 30397909}
   pen: {fileID: 523626825}
+  drawVFX: {fileID: 30397909}
 --- !u!4 &227567094
 Transform:
   m_ObjectHideFlags: 0
@@ -229,8 +229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b12d7b7ba0345934e83310512b357a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawPlane: {fileID: 359589839}
-  tempStartPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &260523515
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +313,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 99999999
+  m_Text: 00.00
 --- !u!222 &260523519
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1123,7 +1121,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 0
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -5861,6 +5859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballSpeed: 2.3
   speedGap: 0.5
+  gravityScaleGap: 0.5
 --- !u!50 &1434399280
 Rigidbody2D:
   serializedVersion: 4

@@ -7,12 +7,14 @@ public class BallHandler : MonoBehaviour
     public float ballSpeed;
     [Tooltip("When the ball is out of x bounds or the direction is higher then ball this value fixes the velocity")]
     [Range(0f, 1f)] public float speedGap = 0.5f;
+    [Tooltip("When the direction is higher then ball this value fixes the gravity scale")]
+    [Range(0f, 1f)] public float gravityScaleGap = 0.5f;
 
     Rigidbody2D ballRigidbody;
     Transform mainCamPos;
 
     float _ballSpeed;
-    float startGravityScale;
+    float baseGravityScale;
 
     float xBoundsMagnitude = 1f;
 
@@ -22,14 +24,15 @@ public class BallHandler : MonoBehaviour
     private void Awake()
     {
         ballRigidbody = GetComponent<Rigidbody2D>();
-        direction = new GameObject("dirPoint").GetComponent<Transform>();
         mainCamPos = Camera.main.GetComponent<Transform>();
+
+        direction = new GameObject("dirPoint").GetComponent<Transform>();
     }
 
     private void Start()
     {
         direction.position = Vector3.right;
-        startGravityScale = ballRigidbody.gravityScale;
+        baseGravityScale = ballRigidbody.gravityScale;
         _ballSpeed = ballSpeed;
     }
 
@@ -39,24 +42,24 @@ public class BallHandler : MonoBehaviour
 
         normal = pos - collision.GetContact(0).normal;
 
-        //Gets the normal and rotates it 90 degrees around the object, ta daaa direction :)
+        //Gets the normal and rotates it 90 degrees around the object, ta daaa the direction :)
         direction.position = normal;
         direction.RotateAround(transform.position, Vector3.forward, 90f);
 
-        ballRigidbody.velocity = CheckDirOnY(direction.position, CheckXBounds(_ballSpeed, speedGap), speedGap);
+        ballRigidbody.velocity = CheckDirOnY(direction.position, CheckXBounds(_ballSpeed, speedGap), speedGap, gravityScaleGap);
     }
 
     //Adds or subtracts speed gap due to direction on y axis
-    Vector3 CheckDirOnY(Vector3 _direction, float speed, float speedGap)
+    Vector3 CheckDirOnY(Vector3 _direction, float speed, float speedGap, float gravityGap)
     {
         if(transform.position.y - _direction.y < 0)
         {
-            ballRigidbody.gravityScale = startGravityScale - speedGap;
+            ballRigidbody.gravityScale = baseGravityScale - gravityGap;
             return _direction.normalized * (speed + speedGap);
         }
         else
         {
-            ballRigidbody.gravityScale = startGravityScale;
+            ballRigidbody.gravityScale = baseGravityScale;
             return _direction.normalized * speed;
         }
     }
