@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class DrawController : MonoBehaviour
 {
+    [Header("Draw Values")]
     [SerializeField] GameObject drawPlane;
     [SerializeField] Color paintColor = Color.white;
     [SerializeField] Color baseColor = Color.black;
-    [SerializeField] Color test;
+
+    [SerializeField] DrawingVFXController drawVFX;
 
     public GameObject pen;
 
     Vector2 lastPoint = Vector2.zero;
+    bool isDrawing;
     
     Texture2D texture;
     DrawToPos drawToPos;
@@ -22,11 +25,11 @@ public class DrawController : MonoBehaviour
         drawToPos.tempStartPoint = pen.transform.position;
 
         texture = Instantiate(drawPlane.GetComponent<Renderer>().material.mainTexture) as Texture2D;
-        for (int y = 0; y < texture.height; y++) // paint all pixels black
+        for (int y = 0; y < texture.height; y++) // paint all pixels base color
         {
             for (int x = 0; x < texture.width; x++)
             {
-                    texture.SetPixel(x, y, Color.black);
+                    texture.SetPixel(x, y, baseColor);
             }
         }
         drawPlane.GetComponent<Renderer>().material.mainTexture = texture;
@@ -37,6 +40,7 @@ public class DrawController : MonoBehaviour
         //record start of mouse drawing to get the first position the mouse touches down
         if (Input.GetMouseButtonDown(0))
         {
+            isDrawing = true;
             RaycastHit ray;
             if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out ray))
             {
@@ -44,11 +48,12 @@ public class DrawController : MonoBehaviour
                                         (int)(ray.textureCoord.y * texture.height));
 
                 drawToPos.tempStartPoint = lastPoint;
+                drawVFX.enabled = true;
             }
         }
 
         //draw a line between the last known location of the mouse and the current location
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && isDrawing)
         {
             RaycastHit ray;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out ray))
@@ -59,9 +64,17 @@ public class DrawController : MonoBehaviour
 
                 lastPoint = new Vector2((int)(ray.textureCoord.x * texture.width),
                                         (int)(ray.textureCoord.y * texture.height));
+            }else
+            {
+                isDrawing = false;
+                drawVFX.enabled = false;
             }
 
             texture.Apply();
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            drawVFX.enabled = false;
         }
     }
 

@@ -17,7 +17,17 @@ public class DrawArea : MonoBehaviour
 
     private void Start()
     {
-        DrawAreaSize = drawAreaSize;
+        if (Camera.main.orthographicSize > 5) DrawAreaSize = drawAreaSize + new Vector3(1f, 1.2f, 0f) * (Camera.main.orthographicSize - 5);
+        else DrawAreaSize = drawAreaSize;
+
+        if (Camera.main.orthographicSize > 5)
+        {
+            drawAreaCenter.y += (Camera.main.orthographicSize - 5) / 4;
+            DrawAreaCenter = drawAreaCenter;
+        }
+            
+        else DrawAreaCenter = drawAreaCenter;
+
         WorldSpeed = worldSpeed;
     }
 
@@ -32,7 +42,10 @@ public class DrawArea : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(drawAreaCenter, drawAreaSize);
+        if(Application.isPlaying)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(DrawAreaCenter, DrawAreaSize);
+        }
     }
 }
